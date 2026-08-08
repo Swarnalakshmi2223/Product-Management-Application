@@ -74,9 +74,9 @@ EliteStore/
     │   │   ├── Navbar.jsx
     │   │   ├── Footer.jsx
     │   │   ├── ProductCard.jsx
-    │   │   └── AddProduct.jsx
+    |   |   |── Home.jsx
+    │   │   └── AddProduct.jsx 
     │   │
-    │   ├── Home.jsx
     │   ├── App.jsx
     │   ├── main.jsx
     │   └── index.css
