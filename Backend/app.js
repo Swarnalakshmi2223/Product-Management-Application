@@ -14,6 +14,7 @@ const port = process.env.PORT || 3000;
 // Connect MongoDB
 db();
 
+app.disable("x-powered-by");
 
 // CORS
 app.use(

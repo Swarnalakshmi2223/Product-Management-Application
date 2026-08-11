@@ -11,72 +11,79 @@ import {
 import ProductCard from "../components/ProductCard";
 
 function Home() {
-
   const [products, setProducts] = useState([]);
-
   const [source, setSource] = useState("mongodb");
-
   const [search, setSearch] = useState("");
-
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-
-  /* ================================
+  /* =================================
      FETCH PRODUCTS
   ================================= */
 
   useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      setError("");
+      setProducts([]);
 
-    setLoading(true);
+      try {
+        let response;
 
-    if (source === "mongodb") {
+        if (source === "mongodb") {
+          response = await axios.get("http://localhost:3000/products");
+        } else {
+          response = await axios.get(
+            "https://fakestoreapi.com/products"
+          );
+        }
 
-      axios
-        .get("http://localhost:3000/products")
-        .then((response) => {
-          setProducts(response.data);
-        })
-        .catch((error) => {
-          console.log("MongoDB Error:", error);
-          setProducts([]);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+        setProducts(response.data);
+      } catch (err) {
+        console.error("Product Fetch Error:", err);
 
-    } else {
+        if (source === "mongodb") {
+          setError(
+            "Unable to load MongoDB products. Please check your backend server."
+          );
+        } else {
+          setError(
+            "Unable to load FakeStore products. Please try again."
+          );
+        }
 
-      axios
-        .get("https://fakestoreapi.com/products")
-        .then((response) => {
-          setProducts(response.data);
-        })
-        .catch((error) => {
-          console.log("FakeStore Error:", error);
-          setProducts([]);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    }
-
+    fetchProducts();
   }, [source]);
 
-
-  /* ================================
-     SEARCH
+  /* =================================
+     SEARCH PRODUCTS
   ================================= */
 
   const filteredProducts = products.filter((product) =>
-    product.title
-      ?.toLowerCase()
-      .includes(search.toLowerCase())
+    product.title?.toLowerCase().includes(search.toLowerCase())
   );
 
+  /* =================================
+     CHANGE SOURCE
+  ================================= */
+
+  const handleSourceChange = (newSource) => {
+    setSource(newSource);
+    setSearch("");
+    setError("");
+  };
+
+  /* =================================
+     RENDER
+  ================================= */
 
   return (
-
     <div className="w-full">
 
       {/* =================================
@@ -89,7 +96,7 @@ function Home() {
           className="
             relative
             w-full
-            min-h-[100px]
+            min-h-[300px]
             rounded-3xl
             overflow-hidden
             border
@@ -122,8 +129,22 @@ function Home() {
             "
           />
 
+          <div
+            className="
+              absolute
+              -left-40
+              -bottom-40
+              w-[450px]
+              h-[250px]
+              rounded-full
+              bg-white/[0.03]
+              blur-3xl
+            "
+          />
 
-          <div className="relative z-10 max-w-1xl">
+          {/* Hero Content */}
+
+          <div className="relative z-10 max-w-3xl">
 
             <p
               className="
@@ -137,12 +158,11 @@ function Home() {
               EliteStore Collection
             </p>
 
-
             <h1
               className="
                 text-4xl
-                sm:text-1xl
-                lg:text-5xl
+                sm:text-5xl
+                lg:text-6xl
                 font-bold
                 tracking-tight
                 text-white
@@ -151,14 +171,13 @@ function Home() {
               Premium Products
             </h1>
 
-
             <p
               className="
                 mt-5
                 text-gray-400
                 text-base
                 sm:text-lg
-                max-w-1xl
+                max-w-2xl
                 leading-8
               "
             >
@@ -172,7 +191,6 @@ function Home() {
 
       </section>
 
-
       {/* =================================
           CONTROLS
       ================================= */}
@@ -185,8 +203,11 @@ function Home() {
 
           <div className="flex flex-wrap items-center gap-3">
 
+            {/* MongoDB Button */}
+
             <button
-              onClick={() => setSource("mongodb")}
+              type="button"
+              onClick={() => handleSourceChange("mongodb")}
               className={`
                 flex
                 items-center
@@ -208,12 +229,13 @@ function Home() {
               <FaDatabase />
 
               MongoDB Products
-
             </button>
 
+            {/* FakeStore Button */}
 
             <button
-              onClick={() => setSource("fakestore")}
+              type="button"
+              onClick={() => handleSourceChange("fakestore")}
               className={`
                 flex
                 items-center
@@ -235,15 +257,15 @@ function Home() {
               <FaGlobe />
 
               FakeStore Products
-
             </button>
 
           </div>
 
-
           {/* SEARCH + FILTER */}
 
           <div className="flex gap-4 mt-6">
+
+            {/* Search */}
 
             <div
               className="
@@ -279,8 +301,10 @@ function Home() {
 
             </div>
 
+            {/* Filter */}
 
             <button
+              type="button"
               className="
                 hidden
                 sm:flex
@@ -300,7 +324,6 @@ function Home() {
               <FaFilter />
 
               Filter
-
             </button>
 
           </div>
@@ -308,7 +331,6 @@ function Home() {
         </div>
 
       </section>
-
 
       {/* =================================
           PRODUCTS HEADER
@@ -332,14 +354,13 @@ function Home() {
               Collection
             </p>
 
-            <h2 className="text-2xl sm:text-3xl font-bold">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
               {source === "mongodb"
                 ? "MongoDB Products"
                 : "FakeStore Products"}
             </h2>
 
           </div>
-
 
           <p className="text-sm text-gray-500">
             {filteredProducts.length} Products
@@ -349,15 +370,15 @@ function Home() {
 
       </section>
 
-
       {/* =================================
-          PRODUCTS
+          PRODUCTS SECTION
       ================================= */}
 
       <section className="px-5 sm:px-8 lg:px-12 py-8">
 
-        {loading ? (
+        {/* LOADING STATE */}
 
+        {loading && (
           <div className="min-h-[300px] flex items-center justify-center">
 
             <div className="text-center">
@@ -367,8 +388,8 @@ function Home() {
                   w-12
                   h-12
                   border-4
-                  border-white/10
-                  border-t-white
+                  border-gray-300
+                  border-t-black
                   rounded-full
                   animate-spin
                   mx-auto
@@ -382,9 +403,11 @@ function Home() {
             </div>
 
           </div>
+        )}
 
-        ) : filteredProducts.length === 0 ? (
+        {/* ERROR STATE */}
 
+        {!loading && error && (
           <div
             className="
               min-h-[300px]
@@ -392,51 +415,122 @@ function Home() {
               items-center
               justify-center
               border
-              border-white/10
+              border-red-200
               rounded-3xl
-              bg-[#111213]
+              bg-red-50
             "
           >
 
-            <div className="text-center">
+            <div className="text-center px-6">
 
-              <h3 className="text-xl font-semibold">
-                No Products Found
+              <h3 className="text-xl font-semibold text-red-700">
+                Unable to Load Products
               </h3>
 
-              <p className="text-gray-500 mt-2">
-                Try another search or add a product.
+              <p className="text-red-500 mt-2">
+                {error}
               </p>
+
+              <button
+                type="button"
+                onClick={() => handleSourceChange(source)}
+                className="
+                  mt-6
+                  px-6
+                  py-3
+                  rounded-full
+                  bg-black
+                  text-white
+                  font-semibold
+                  hover:bg-gray-800
+                  transition
+                "
+              >
+                Try Again
+              </button>
 
             </div>
 
           </div>
-
-        ) : (
-
-          <div
-            className="
-              grid
-              grid-cols-1
-              sm:grid-cols-2
-              lg:grid-cols-3
-              xl:grid-cols-4
-              gap-6
-            "
-          >
-
-            {filteredProducts.map((product) => (
-
-              <ProductCard
-                key={product._id || product.id}
-                product={product}
-              />
-
-            ))}
-
-          </div>
-
         )}
+
+        {/* EMPTY STATE */}
+
+        {!loading &&
+          !error &&
+          filteredProducts.length === 0 && (
+            <div
+              className="
+                min-h-[300px]
+                flex
+                items-center
+                justify-center
+                border
+                border-gray-200
+                rounded-3xl
+                bg-gray-50
+              "
+            >
+
+              <div className="text-center">
+
+                <h3 className="text-xl font-semibold text-gray-800">
+                  No Products Found
+                </h3>
+
+                <p className="text-gray-500 mt-2">
+                  Try another search or add a product.
+                </p>
+
+                {search && (
+                  <button
+                    type="button"
+                    onClick={() => setSearch("")}
+                    className="
+                      mt-5
+                      px-5
+                      py-2
+                      rounded-full
+                      bg-black
+                      text-white
+                      hover:bg-gray-800
+                      transition
+                    "
+                  >
+                    Clear Search
+                  </button>
+                )}
+
+              </div>
+
+            </div>
+          )}
+
+        {/* PRODUCT GRID */}
+
+        {!loading &&
+          !error &&
+          filteredProducts.length > 0 && (
+            <div
+              className="
+                grid
+                grid-cols-1
+                sm:grid-cols-2
+                lg:grid-cols-3
+                xl:grid-cols-4
+                gap-6
+              "
+            >
+
+              {filteredProducts.map((product) => (
+                <ProductCard
+                  key={product._id || product.id}
+                  product={product}
+                />
+              ))}
+
+            </div>
+          )}
 
       </section>
 

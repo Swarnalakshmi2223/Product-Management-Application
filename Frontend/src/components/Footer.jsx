@@ -138,7 +138,7 @@ function Footer() {
             <div className="flex gap-3">
 
               <a
-                href="#"
+                href="https://github.com/Swarnalakshmi2223"
                 className="
                   w-12
                   h-12
@@ -160,7 +160,7 @@ function Footer() {
 
 
               <a
-                href="#"
+                href="https://www.linkedin.com/in/swarnalakshmi-perumal/"
                 className="
                   w-12
                   h-12
@@ -182,7 +182,7 @@ function Footer() {
 
 
               <a
-                href="#"
+                href="https://www.instagram.com/swarnalakshmi_perumal/"
                 className="
                   w-12
                   h-12
@@ -204,7 +204,7 @@ function Footer() {
 
 
               <a
-                href="#"
+                href="mailto:swarnalak4@gmail.com"
                 className="
                   w-12
                   h-12
