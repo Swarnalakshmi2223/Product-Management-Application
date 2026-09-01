@@ -17,9 +17,9 @@ function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  /* =================================
+  /* =========================================
      FETCH PRODUCTS
-  ================================= */
+  ========================================= */
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -31,7 +31,9 @@ function Home() {
         let response;
 
         if (source === "mongodb") {
-          response = await axios.get("http://localhost:3000/products");
+          response = await axios.get(
+            "http://localhost:3000/products"
+          );
         } else {
           response = await axios.get(
             "https://fakestoreapi.com/products"
@@ -61,17 +63,19 @@ function Home() {
     fetchProducts();
   }, [source]);
 
-  /* =================================
+  /* =========================================
      SEARCH PRODUCTS
-  ================================= */
+  ========================================= */
 
   const filteredProducts = products.filter((product) =>
-    product.title?.toLowerCase().includes(search.toLowerCase())
+    product.title
+      ?.toLowerCase()
+      .includes(search.toLowerCase())
   );
 
-  /* =================================
+  /* =========================================
      CHANGE SOURCE
-  ================================= */
+  ========================================= */
 
   const handleSourceChange = (newSource) => {
     setSource(newSource);
@@ -79,16 +83,16 @@ function Home() {
     setError("");
   };
 
-  /* =================================
+  /* =========================================
      RENDER
-  ================================= */
+  ========================================= */
 
   return (
-    <div className="w-full">
+    <div className="min-h-screen w-full bg-[#0a0a0a] text-white">
 
-      {/* =================================
+      {/* =====================================
           HERO SECTION
-      ================================= */}
+      ===================================== */}
 
       <section className="px-5 sm:px-8 lg:px-12 pt-12">
 
@@ -102,15 +106,16 @@ function Home() {
             border
             border-white/10
             bg-gradient-to-br
-            from-[#18191b]
-            via-[#111214]
-            to-[#080909]
+            from-[#1c1c1f]
+            via-[#111113]
+            to-[#050505]
             px-8
             sm:px-12
             lg:px-16
             py-12
             flex
             items-center
+            shadow-[0_20px_60px_rgba(0,0,0,0.4)]
           "
         >
 
@@ -125,7 +130,7 @@ function Home() {
               h-[300px]
               rounded-full
               bg-white/[0.04]
-              blur-2xl
+              blur-3xl
             "
           />
 
@@ -151,7 +156,7 @@ function Home() {
                 text-xs
                 uppercase
                 tracking-[0.35em]
-                text-gray-500
+                text-gray-400
                 mb-4
               "
             >
@@ -174,7 +179,7 @@ function Home() {
             <p
               className="
                 mt-5
-                text-gray-400
+                text-gray-300
                 text-base
                 sm:text-lg
                 max-w-2xl
@@ -191,9 +196,10 @@ function Home() {
 
       </section>
 
-      {/* =================================
+
+      {/* =====================================
           CONTROLS
-      ================================= */}
+      ===================================== */}
 
       <section className="px-5 sm:px-8 lg:px-12 mt-10">
 
@@ -203,7 +209,7 @@ function Home() {
 
           <div className="flex flex-wrap items-center gap-3">
 
-            {/* MongoDB Button */}
+            {/* MongoDB */}
 
             <button
               type="button"
@@ -219,10 +225,22 @@ function Home() {
                 border
                 transition-all
                 duration-300
+
                 ${
                   source === "mongodb"
-                    ? "bg-white text-black border-white shadow-[0_0_25px_rgba(255,255,255,0.15)]"
-                    : "bg-[#1a1b1d] text-gray-300 border-white/10 hover:border-white/30"
+                    ? `
+                      bg-white
+                      text-black
+                      border-white
+                      shadow-[0_0_25px_rgba(255,255,255,0.15)]
+                    `
+                    : `
+                      bg-[#171719]
+                      text-gray-300
+                      border-white/10
+                      hover:border-white/30
+                      hover:bg-[#222225]
+                    `
                 }
               `}
             >
@@ -231,7 +249,8 @@ function Home() {
               MongoDB Products
             </button>
 
-            {/* FakeStore Button */}
+
+            {/* FakeStore */}
 
             <button
               type="button"
@@ -247,10 +266,22 @@ function Home() {
                 border
                 transition-all
                 duration-300
+
                 ${
                   source === "fakestore"
-                    ? "bg-white text-black border-white shadow-[0_0_25px_rgba(255,255,255,0.15)]"
-                    : "bg-[#1a1b1d] text-gray-300 border-white/10 hover:border-white/30"
+                    ? `
+                      bg-white
+                      text-black
+                      border-white
+                      shadow-[0_0_25px_rgba(255,255,255,0.15)]
+                    `
+                    : `
+                      bg-[#171719]
+                      text-gray-300
+                      border-white/10
+                      hover:border-white/30
+                      hover:bg-[#222225]
+                    `
                 }
               `}
             >
@@ -261,7 +292,10 @@ function Home() {
 
           </div>
 
-          {/* SEARCH + FILTER */}
+
+          {/* =================================
+              SEARCH + FILTER
+          ================================= */}
 
           <div className="flex gap-4 mt-6">
 
@@ -272,14 +306,15 @@ function Home() {
                 flex
                 items-center
                 flex-1
-                bg-[#151617]
+                bg-[#151517]
                 border
                 border-white/10
                 rounded-2xl
                 px-5
                 py-4
                 focus-within:border-white/30
-                transition
+                focus-within:shadow-[0_0_20px_rgba(255,255,255,0.05)]
+                transition-all
               "
             >
 
@@ -295,11 +330,12 @@ function Home() {
                   bg-transparent
                   outline-none
                   text-white
-                  placeholder-gray-500
+                  placeholder:text-gray-500
                 "
               />
 
             </div>
+
 
             {/* Filter */}
 
@@ -314,11 +350,12 @@ function Home() {
                 rounded-2xl
                 border
                 border-white/10
-                bg-[#151617]
+                bg-[#151517]
                 text-gray-300
                 hover:bg-white
                 hover:text-black
-                transition
+                transition-all
+                duration-300
               "
             >
               <FaFilter />
@@ -332,13 +369,25 @@ function Home() {
 
       </section>
 
-      {/* =================================
+
+      {/* =====================================
           PRODUCTS HEADER
-      ================================= */}
+      ===================================== */}
 
-      <section className="px-5 sm:px-8 lg:px-12 mt-12">
+      <section className="px-5 sm:px-8 lg:px-12 mt-14">
 
-        <div className="flex items-end justify-between">
+        <div
+          className="
+            flex
+            items-end
+            justify-between
+            border-b
+            border-white/10
+            pb-6
+          "
+        >
+
+          {/* LEFT */}
 
           <div>
 
@@ -347,14 +396,21 @@ function Home() {
                 text-xs
                 uppercase
                 tracking-[0.3em]
-                text-gray-600
-                mb-2
+                text-gray-400
+                mb-3
               "
             >
               Collection
             </p>
 
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            <h2
+              className="
+                text-2xl
+                sm:text-3xl
+                font-bold
+                text-white
+              "
+            >
               {source === "mongodb"
                 ? "MongoDB Products"
                 : "FakeStore Products"}
@@ -362,7 +418,16 @@ function Home() {
 
           </div>
 
-          <p className="text-sm text-gray-500">
+
+          {/* PRODUCT COUNT */}
+
+          <p
+            className="
+              text-sm
+              text-gray-400
+              font-medium
+            "
+          >
             {filteredProducts.length} Products
           </p>
 
@@ -370,13 +435,16 @@ function Home() {
 
       </section>
 
-      {/* =================================
+
+      {/* =====================================
           PRODUCTS SECTION
-      ================================= */}
+      ===================================== */}
 
       <section className="px-5 sm:px-8 lg:px-12 py-8">
 
-        {/* LOADING STATE */}
+        {/* =================================
+            LOADING
+        ================================= */}
 
         {loading && (
           <div className="min-h-[300px] flex items-center justify-center">
@@ -388,15 +456,15 @@ function Home() {
                   w-12
                   h-12
                   border-4
-                  border-gray-300
-                  border-t-black
+                  border-white/20
+                  border-t-white
                   rounded-full
                   animate-spin
                   mx-auto
                 "
               />
 
-              <p className="mt-5 text-gray-500">
+              <p className="mt-5 text-gray-400">
                 Loading products...
               </p>
 
@@ -405,7 +473,10 @@ function Home() {
           </div>
         )}
 
-        {/* ERROR STATE */}
+
+        {/* =================================
+            ERROR
+        ================================= */}
 
         {!loading && error && (
           <div
@@ -415,19 +486,25 @@ function Home() {
               items-center
               justify-center
               border
-              border-red-200
+              border-red-500/20
               rounded-3xl
-              bg-red-50
+              bg-red-500/5
             "
           >
 
             <div className="text-center px-6">
 
-              <h3 className="text-xl font-semibold text-red-700">
+              <h3
+                className="
+                  text-xl
+                  font-semibold
+                  text-red-400
+                "
+              >
                 Unable to Load Products
               </h3>
 
-              <p className="text-red-500 mt-2">
+              <p className="text-red-300 mt-2">
                 {error}
               </p>
 
@@ -439,10 +516,10 @@ function Home() {
                   px-6
                   py-3
                   rounded-full
-                  bg-black
-                  text-white
+                  bg-white
+                  text-black
                   font-semibold
-                  hover:bg-gray-800
+                  hover:bg-gray-200
                   transition
                 "
               >
@@ -454,11 +531,15 @@ function Home() {
           </div>
         )}
 
-        {/* EMPTY STATE */}
+
+        {/* =================================
+            EMPTY STATE
+        ================================= */}
 
         {!loading &&
           !error &&
           filteredProducts.length === 0 && (
+
             <div
               className="
                 min-h-[300px]
@@ -466,19 +547,25 @@ function Home() {
                 items-center
                 justify-center
                 border
-                border-gray-200
+                border-white/10
                 rounded-3xl
-                bg-gray-50
+                bg-[#111113]
               "
             >
 
               <div className="text-center">
 
-                <h3 className="text-xl font-semibold text-gray-800">
+                <h3
+                  className="
+                    text-xl
+                    font-semibold
+                    text-white
+                  "
+                >
                   No Products Found
                 </h3>
 
-                <p className="text-gray-500 mt-2">
+                <p className="text-gray-400 mt-2">
                   Try another search or add a product.
                 </p>
 
@@ -491,9 +578,10 @@ function Home() {
                       px-5
                       py-2
                       rounded-full
-                      bg-black
-                      text-white
-                      hover:bg-gray-800
+                      bg-white
+                      text-black
+                      font-semibold
+                      hover:bg-gray-200
                       transition
                     "
                   >
@@ -506,11 +594,15 @@ function Home() {
             </div>
           )}
 
-        {/* PRODUCT GRID */}
+
+        {/* =================================
+            PRODUCT GRID
+        ================================= */}
 
         {!loading &&
           !error &&
           filteredProducts.length > 0 && (
+
             <div
               className="
                 grid
@@ -523,13 +615,16 @@ function Home() {
             >
 
               {filteredProducts.map((product) => (
+
                 <ProductCard
                   key={product._id || product.id}
                   product={product}
                 />
+
               ))}
 
             </div>
+
           )}
 
       </section>

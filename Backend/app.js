@@ -2,7 +2,10 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
+console.log("JWT SECRET EXISTS:", !!process.env.JWT_SECRET);
+
 const productRoutes = require("./routes/productRoutes");
+const authRoutes = require("./routes/authRoutes");
 const db = require("./config/db");
 
 
@@ -38,6 +41,7 @@ app.get("/", (req, res) => {
 
 // Product routes
 app.use("/products", productRoutes);
+app.use("/auth", authRoutes);
 
 
 // Start server
