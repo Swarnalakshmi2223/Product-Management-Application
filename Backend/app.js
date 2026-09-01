@@ -40,8 +40,8 @@ app.get("/", (req, res) => {
 
 
 // Product routes
-app.use("/products", productRoutes);
-app.use("/auth", authRoutes);
+// app.use("/products", productRoutes);
+// app.use("/auth", authRoutes);
 
 
 // Start server
